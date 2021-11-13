@@ -17,22 +17,16 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:2.1.3.RELEASE")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("com.fasterxml.jackson.core:jackson-core:2.12.3")
-	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.12.3")
-	implementation("com.auth0:java-jwt:3.10.3")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	testImplementation("com.github.tomakehurst:wiremock-jre8:2.26.3")
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
-		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
-	}
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") 
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
 	testImplementation("org.mockito:mockito-junit-jupiter")
 	testImplementation("org.mockito:mockito-core:3.5.7")
 
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter:5.6.2")
 }
 
 tasks.withType<KotlinCompile> {
