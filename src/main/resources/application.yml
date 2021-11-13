@@ -1,1 +1,4 @@
 
+database :
+  json:
+    file-name: "portfolios.json"

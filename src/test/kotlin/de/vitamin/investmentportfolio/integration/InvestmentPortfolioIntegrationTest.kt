@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,7 +33,7 @@ class InvestmentPortfolioIntegrationTest {
             val response = mockMvc.perform(request)
 
             response
-                .andExpect(MockMvcResultMatchers.status().isNotFound)
+                .andExpect(status().isNotFound)
         }
     }
 
@@ -43,12 +44,41 @@ class InvestmentPortfolioIntegrationTest {
         internal fun `should return Bad request for invalid risk level`() {
             val request = MockMvcRequestBuilders
                 .get("/users/me/investment-portfolio")
-                .requestAttr("riskLevel", "99")
+                .param("riskLevel", "2")
 
             val response = mockMvc.perform(request)
 
             response
-                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+                .andExpect(status().isBadRequest)
+        }
+
+        @Test
+        internal fun `should return Bad request if risk level is not provided`() {
+            val request = MockMvcRequestBuilders
+                .get("/users/me/investment-portfolio")
+
+            val response = mockMvc.perform(request)
+
+            response
+                .andExpect(status().isBadRequest)
+        }
+
+        @Test
+        internal fun `should return valid portfolio for valid risk level`() {
+            val request = MockMvcRequestBuilders
+                .get("/users/me/investment-portfolio")
+                .param("riskLevel", "5")
+
+            val response = mockMvc.perform(request)
+
+            response
+                .andExpect(status().is2xxSuccessful)
+                .andExpect(jsonPath("$.portfolio[0].weight").value(0.65))
+                .andExpect(jsonPath("$.portfolio[0].ticker").value("CAKE"))
+                .andExpect(jsonPath("$.portfolio[1].weight").value(0.20))
+                .andExpect(jsonPath("$.portfolio[1].ticker").value("PZZA"))
+                .andExpect(jsonPath("$.portfolio[2].weight").value(0.15))
+                .andExpect(jsonPath("$.portfolio[2].ticker").value("EAT"))
         }
 
     }

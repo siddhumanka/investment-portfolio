@@ -20,6 +20,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 	testImplementation("com.github.tomakehurst:wiremock-jre8:2.26.3")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
