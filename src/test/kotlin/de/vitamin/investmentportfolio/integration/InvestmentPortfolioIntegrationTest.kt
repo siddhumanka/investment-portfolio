@@ -6,6 +6,7 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -26,7 +27,6 @@ class InvestmentPortfolioIntegrationTest {
 
         @Test
         internal fun `should return 404 for a non existing endpoint`() {
-
             val request = MockMvcRequestBuilders
                 .get("/non-existing")
 
@@ -82,5 +82,66 @@ class InvestmentPortfolioIntegrationTest {
         }
 
     }
+
+
+    @Nested
+    inner class CurrentValueTest {
+
+        @Test
+        internal fun `should return Bad request for invalid from date provided`() {
+            val request = MockMvcRequestBuilders
+                .post("/users/me/investment-portfolio/current-value")
+                .contentType(APPLICATION_JSON)
+                .content("""{
+                              "from"                : "ajhdbdjc",   |
+                              "to"                  : "01.03.2021", |
+                              "monthlyContribution" : 450,          |
+                              "riskLevel"           : 5  
+                         }""".trimMargin())
+
+            val response = mockMvc.perform(request)
+
+            response
+                .andExpect(status().isBadRequest)
+        }
+
+        @Test
+        internal fun `should return Bad request for invalid to date provided`() {
+            val request = MockMvcRequestBuilders
+                .post("/users/me/investment-portfolio/current-value")
+                .contentType(APPLICATION_JSON)
+                .content("""{
+                              "from"                : "01.03.2021",   |
+                              "to"                  : "01.45.2021", |
+                              "monthlyContribution" : 450,          |
+                              "riskLevel"           : 5  
+                         }""".trimMargin())
+
+            val response = mockMvc.perform(request)
+
+            response
+                .andExpect(status().isBadRequest)
+        }
+
+        @Test
+        internal fun `should return Bad request for invalid monthly contribution provided`() {
+            val request = MockMvcRequestBuilders
+                .post("/users/me/investment-portfolio/current-value")
+                .contentType(APPLICATION_JSON)
+                .content("""{
+                              "from"                : "01.03.2021",   |
+                              "to"                  : "01.45.2021", |
+                              "monthlyContribution" : ajsbfdjh,          |
+                              "riskLevel"           : 5  
+                         }""".trimMargin())
+
+            val response = mockMvc.perform(request)
+
+            response
+                .andExpect(status().isBadRequest)
+        }
+
+    }
+
 
 }
