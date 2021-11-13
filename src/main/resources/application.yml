@@ -2,3 +2,7 @@
 database :
   json:
     file-name: "portfolios.json"
+
+financial-modeling:
+      url: "https://financialmodelingprep.com/"
+      api-key : "121bdd04c4cd07058d0d8f91cc5e0287"

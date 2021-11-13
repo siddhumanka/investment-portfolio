@@ -8,5 +8,15 @@
   },{
     "weight": 0.15,
     "ticker": "EAT"
+  }],
+  "7": [{
+    "weight": 0.30,
+    "ticker": "CAKE"
+  },{
+    "weight": 0.30,
+    "ticker": "PZZA"
+  },{
+    "weight": 0.40,
+    "ticker": "EAT"
   }]
 }

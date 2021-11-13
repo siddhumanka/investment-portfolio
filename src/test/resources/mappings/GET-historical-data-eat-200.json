@@ -1,0 +1,32 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPattern": "/api/v3/historical-price-full/EAT\\?from=2017-01-01&to=2017-03-09&apikey=key",
+    "headers": {
+      "Accept": {
+        "equalTo": "application/json"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "transformers": [
+      "response-template"
+    ],
+    "jsonBody": {
+      "historical": [
+        {
+          "close": 12.00
+        },
+        {
+          "close": 12.00
+        }
+      ]
+    },
+    "headers": {
+      "Cache-Control": "no-cache",
+      "Content-Type": "application/json"
+    }
+  }
+}

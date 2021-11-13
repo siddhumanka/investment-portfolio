@@ -2,3 +2,7 @@
 database :
   json:
     file-name: "test-portfolios.json"
+
+financial-modeling:
+  url: "http://localhost:8081"
+  api-key : "key"
