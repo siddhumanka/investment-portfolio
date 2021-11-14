@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -95,7 +94,7 @@ class InvestmentPortfolioIntegrationTest {
 
 
     @Nested
-    inner class CurrentValueTest {
+    inner class CurrentInvestedPortfolioTest {
 
         @Test
         internal fun `should return Bad request for invalid from date provided`() {
@@ -163,7 +162,7 @@ class InvestmentPortfolioIntegrationTest {
             webclient
                 .post()
                 .uri("/users/me/investment-portfolio/current-value")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .body(
                     BodyInserters.fromValue("{\n" +
                             "\"from\"                : \"01.01.2017\",\n" +

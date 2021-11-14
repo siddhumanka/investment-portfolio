@@ -31,15 +31,20 @@ internal class HistoricalDataServiceTest {
         val stockName = "CAKE"
         val fromDate = "2017-01-01"
         val toDate = "2021-01-01"
-        val expectedCloseValue = 20.00
+        val expectedCloseValue1 = 20.00
+        val expectedCloseValue2 = 24.00
+        val expectedCloseValue3 = 28.00
         Mockito.`when`(client.getHistoricalData(stockName, fromDate, toDate, apiKey)).thenReturn(
             HistoricalDataResponse(
-                listOf(HistoricalData(expectedCloseValue))
+                listOf(HistoricalData(expectedCloseValue1, "2017-02-09"),
+                    HistoricalData(expectedCloseValue2, "2017-01-09"),
+                    HistoricalData(expectedCloseValue3, "2017-01-01"))
             )
         )
 
         val closeAmounts = service.getAllCloseValuesFor(stockName, fromDate, toDate)
 
-        assertThat(closeAmounts[0]).isEqualTo(expectedCloseValue)
+        assertThat(closeAmounts[0]).isEqualTo(expectedCloseValue3)
+        assertThat(closeAmounts[1]).isEqualTo(expectedCloseValue1)
     }
 }

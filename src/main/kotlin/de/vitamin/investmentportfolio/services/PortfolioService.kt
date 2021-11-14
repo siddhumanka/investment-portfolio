@@ -6,6 +6,7 @@ import de.vitamin.investmentportfolio.models.requests.InvestedPortfolioRequest
 import de.vitamin.investmentportfolio.models.responses.InvestedPortfolioResponse
 import de.vitamin.investmentportfolio.models.responses.InvestedShareDetail
 import de.vitamin.investmentportfolio.models.responses.PortFolioResponse
+import de.vitamin.investmentportfolio.models.responses.ShareDetail
 import de.vitamin.investmentportfolio.repositories.Repository
 import org.springframework.stereotype.Service
 import java.util.*
@@ -17,7 +18,6 @@ class PortfolioService(
     private val historicalDataService: HistoricalDataService
 ) {
     fun getPortfolio(riskLevel: String): PortFolioResponse {
-
         val portfolios = repository.getPortfolioForRiskLevel(riskLevel)
             ?: throw InvalidAttributeException("Invalid risk level provided : $riskLevel")
 
@@ -32,13 +32,7 @@ class PortfolioService(
 
         val portfolio = getPortfolio(request.riskLevel).portfolio
 
-        val desiredStockEntries = portfolio.map {
-            DesiredStockEntry(
-                it.ticker,
-                it.weight,
-                historicalDataService.getAllCloseValuesFor(it.ticker, fromDate, toDate)
-            )
-        }
+        val desiredStockEntries = getDesiredStocks(portfolio, fromDate, toDate)
 
         val investedShareDetails = desiredStockEntries.map { metadata ->
             InvestedShareDetail(
@@ -47,11 +41,27 @@ class PortfolioService(
             )
         }
 
-        val totalAmountInvested =
-            desiredStockEntries.map { (it.weight * request.monthlyContribution) * it.closeValues.size }
-                .reduceRight { i, j -> i + j }
+        val totalAmountInvested = calculateTotalInvestedAmount(desiredStockEntries, request)
 
         return InvestedPortfolioResponse(investedShareDetails, totalAmountInvested)
+    }
+
+    private fun calculateTotalInvestedAmount(
+        desiredStockEntries: List<DesiredStockEntry>,
+        request: InvestedPortfolioRequest
+    ) = desiredStockEntries.map { (it.weight * request.monthlyContribution) * it.closeValues.size }
+        .reduceRight { i, j -> i + j }
+
+    private fun getDesiredStocks(
+        portfolio: List<ShareDetail>,
+        fromDate: String,
+        toDate: String
+    ) = portfolio.map {
+        DesiredStockEntry(
+            it.ticker,
+            it.weight,
+            historicalDataService.getAllCloseValuesFor(it.ticker, fromDate, toDate)
+        )
     }
 
     private fun calculateInvested(closeValues: List<Double>, monthlyContribution: Double, weight: Double): Double {

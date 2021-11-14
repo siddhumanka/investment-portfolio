@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test
 
 internal class JsonFileRepositoryTest{
 
+    private val repository = JsonFileRepository("test-portfolios.json")
+
     @Test
     internal fun `should return portfolios from json file`() {
 
-        val portfolio = JsonFileRepository("test-portfolios.json").getPortfolioForRiskLevel("5")
+        val portfolio = repository.getPortfolioForRiskLevel("5")
 
         assertThat(portfolio!![0].weight).isEqualTo(0.65)
         assertThat(portfolio[0].ticker).isEqualTo("CAKE")
@@ -18,7 +20,7 @@ internal class JsonFileRepositoryTest{
     @Test
     internal fun `should return null if risk level is empty`() {
 
-        val portfolio = JsonFileRepository("test-portfolios.json").getPortfolioForRiskLevel("")
+        val portfolio = repository.getPortfolioForRiskLevel("")
 
         assertThat(portfolio).isNull()
     }
@@ -26,7 +28,7 @@ internal class JsonFileRepositoryTest{
     @Test
     internal fun `should return null if risk level is invalid`() {
 
-        val portfolio = JsonFileRepository("test-portfolios.json").getPortfolioForRiskLevel("34333")
+        val portfolio = repository.getPortfolioForRiskLevel("34333")
 
         assertThat(portfolio).isNull()
     }

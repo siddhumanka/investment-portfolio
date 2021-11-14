@@ -67,7 +67,6 @@ internal class PortfolioServiceTest {
             riskLevel = "5"
         )
 
-
         assertThrows<InvalidAttributeException> { portfolioService.getInvestedPortfolio(investedPortfolioRequest) }
     }
 

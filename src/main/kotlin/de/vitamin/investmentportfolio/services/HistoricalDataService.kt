@@ -1,6 +1,7 @@
 package de.vitamin.investmentportfolio.services
 
 import de.vitamin.investmentportfolio.clients.FinancialModelingClient
+import de.vitamin.investmentportfolio.clients.responses.HistoricalData
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -12,7 +13,23 @@ class HistoricalDataService(
 ) {
 
     fun getAllCloseValuesFor(stockName: String, fromDate: String, toDate: String): List<Double> {
-        return client.getHistoricalData(stockName, fromDate, toDate, apiKey).historical.map { it.close }.reversed()
+        val historicalDataList = client.getHistoricalData(stockName, fromDate, toDate, apiKey).historical
+        return getOnlyMonthlyCloseValues(historicalDataList.reversed())
     }
 
+    private fun getOnlyMonthlyCloseValues(historical: List<HistoricalData>) :  List<Double> {
+        val monthlyCloseValues = mutableListOf<Double>()
+        var i = 0
+        monthlyCloseValues.add(historical[0].close)
+        while (i < historical.size - 1) {
+            if (getMonth(historical[i + 1].date) != getMonth(historical[i].date))
+                monthlyCloseValues.add(historical[i + 1].close)
+            i++
+        }
+        return monthlyCloseValues
+    }
+
+    private fun getMonth(date: String): String {
+        return date.split("-")[1]
+    }
 }
